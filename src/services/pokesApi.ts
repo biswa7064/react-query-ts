@@ -14,7 +14,7 @@ const getPokes = async (): Promise<GetPokesType<PokeType>> => {
         status: 200,
       })
     } catch (error) {
-      reject(error)
+      reject((error as Error).message ?? "Something went wrong !!!")
     }
   })
 }
