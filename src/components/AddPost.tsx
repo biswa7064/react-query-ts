@@ -14,16 +14,12 @@ const AddPost = () => {
     title: "",
     body: "",
   })
-  const { mutate, error, isSuccess, status, data } = useMutation(
-    ["addPost"],
-    createPost,
-    {
-      retry: false,
-      onSuccess: () => {
-        client.invalidateQueries("allPosts")
-      },
-    }
-  )
+  const { mutate, error, isSuccess, status, data } = useMutation(createPost, {
+    retry: false,
+    onSuccess: () => {
+      client.invalidateQueries("allPosts")
+    },
+  })
 
   const onChange = (
     ev: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
