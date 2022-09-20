@@ -5,6 +5,7 @@ import { PostType } from "./types/postTypes"
 import { getPostByID, getPosts } from "./services/postApi"
 import { useState } from "react"
 import PostCard from "./components/PostCard"
+import AddPost from "./components/AddPost"
 
 function App() {
   const [selectID, setSelectID] = useState<number | undefined>(undefined)
@@ -14,24 +15,43 @@ function App() {
     initialData: {},
   })
 
-  const { data: selectedPost } = useQuery<GetDataType<PostType>>(
-    ["selectedPost", selectID],
-    getPostByID,
-    {
-      initialData: {},
-      enabled: Boolean(selectID),
-    }
-  )
+  const { data: selectedPost, isFetching: isLoadingPost } = useQuery<
+    GetDataType<PostType>
+  >(["selectedPost", selectID], getPostByID, {
+    initialData: {},
+    enabled: Boolean(selectID),
+  })
 
   return (
     <div className="root-container">
+      <AddPost />
       {selectID ? (
-        <PostCard key={selectedPost?.data?.id} item={selectedPost?.data} />
+        <div className="single-post">
+          {isLoadingPost ? (
+            <p>Loading....</p>
+          ) : (
+            <>
+              <PostCard
+                key={selectedPost?.data?.id}
+                item={selectedPost?.data}
+              />
+              <button
+                className="btn-primary"
+                type="button"
+                onClick={() => {
+                  setSelectID(undefined)
+                }}
+              >
+                CLOSE
+              </button>
+            </>
+          )}
+        </div>
       ) : (
         <>
           {!error && (
             <>
-              {isLoading || isFetching ? (
+              {isFetching ? (
                 <p>Loading....</p>
               ) : (
                 <div className="container">

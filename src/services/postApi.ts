@@ -1,12 +1,9 @@
 import axios from "axios"
-import { GetDataType } from "../types"
+import { GetDataType, PostDataType } from "../types"
 import { PostType } from "../types/postTypes"
 
 const apiClient = axios.create({
   baseURL: "https://jsonplaceholder.typicode.com",
-  headers: {
-    "content-type": "application/json",
-  },
 })
 
 const getPosts = async (): Promise<GetDataType<PostType[]>> => {
@@ -39,4 +36,26 @@ const getPostByID = async (id: any): Promise<GetDataType<PostType>> => {
   })
 }
 
-export { getPosts, getPostByID }
+const createPost = async (
+  data: Omit<PostType, "id">
+): Promise<PostDataType<any>> => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      const res = await apiClient.post(
+        "https://jsonplaceholder.typicode.com/posts",
+        data
+      )
+      resolve({
+        postedData: res?.data,
+        successMsg: "Data added successfully",
+        error: undefined,
+        status: res?.status,
+      })
+    } catch (error) {
+      const err = (error as Error).message
+      reject(err)
+    }
+  })
+}
+
+export { getPosts, getPostByID, createPost }

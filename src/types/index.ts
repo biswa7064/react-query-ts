@@ -16,3 +16,10 @@ export type GetDataType<T> = {
   successMsg?: string
   status?: number
 }
+
+export type PostDataType<PD> = {
+  error?: string
+  successMsg?: string
+  status?: number
+  postedData?: PD
+}
