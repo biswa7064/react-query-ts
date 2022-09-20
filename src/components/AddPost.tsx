@@ -1,6 +1,5 @@
 import React, { useState } from "react"
 import { useMutation, useQueryClient } from "react-query"
-import { preProcessFile } from "typescript"
 import { createPost } from "../services/postApi"
 
 interface PostFormType {
