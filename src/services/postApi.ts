@@ -1,22 +1,24 @@
-import axios from "axios"
+import { AxiosError } from "axios"
+import CONFIG from "../config"
 import { GetDataType, PostDataType } from "../types"
 import { PostType } from "../types/postTypes"
 
-const apiClient = axios.create({
-  baseURL: "https://jsonplaceholder.typicode.com",
-})
+const throwError = (err: unknown): string => {
+  const errMsg = (err as AxiosError).message || "Something went wrong !!!"
+  return errMsg
+}
 
 const getPosts = async (): Promise<GetDataType<PostType[]>> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await apiClient.get("posts")
+      const res = await CONFIG.postApiClient.get("posts")
       resolve({
         successMsg: "Fetched successful",
         data: res?.data,
         status: 200,
       })
     } catch (error) {
-      reject((error as Error).message ?? "Something went wrong !!!")
+      reject(throwError(error))
     }
   })
 }
@@ -24,14 +26,14 @@ const getPosts = async (): Promise<GetDataType<PostType[]>> => {
 const getPostByID = async (id: any): Promise<GetDataType<PostType>> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await apiClient.get(`posts/${id?.queryKey?.[1]}`)
+      const res = await CONFIG.postApiClient.get(`posts/${id?.queryKey?.[1]}`)
       resolve({
         successMsg: "Fetched successful",
         data: res?.data,
         status: 200,
       })
     } catch (error) {
-      reject((error as Error).message ?? "Something went wrong !!!")
+      reject(throwError(error))
     }
   })
 }
@@ -41,7 +43,7 @@ const createPost = async (
 ): Promise<PostDataType<any>> => {
   return new Promise(async (resolve, reject) => {
     try {
-      const res = await apiClient.post(
+      const res = await CONFIG.postApiClient.post(
         "https://jsonplaceholder.typicode.com/posts",
         data
       )
@@ -52,8 +54,7 @@ const createPost = async (
         status: res?.status,
       })
     } catch (error) {
-      const err = (error as Error).message
-      reject(err)
+      reject(throwError(error))
     }
   })
 }

@@ -9,11 +9,13 @@ import AddPost from "./components/AddPost"
 
 function App() {
   const [selectID, setSelectID] = useState<number | undefined>(undefined)
-  const { data, isLoading, isFetching, error } = useQuery<
-    GetDataType<PostType[]>
-  >("allPosts", getPosts, {
-    initialData: {},
-  })
+  const { data, isFetching, error } = useQuery<GetDataType<PostType[]>>(
+    "allPosts",
+    getPosts,
+    {
+      initialData: {},
+    }
+  )
 
   const { data: selectedPost, isFetching: isLoadingPost } = useQuery<
     GetDataType<PostType>
@@ -24,7 +26,6 @@ function App() {
 
   return (
     <div className="root-container">
-      <AddPost />
       {selectID ? (
         <div className="single-post">
           {isLoadingPost ? (
@@ -49,6 +50,7 @@ function App() {
         </div>
       ) : (
         <>
+          <AddPost />
           {!error && (
             <>
               {isFetching ? (

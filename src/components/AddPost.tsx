@@ -13,7 +13,7 @@ const AddPost = () => {
     title: "",
     body: "",
   })
-  const { mutate, error, isSuccess, status, data } = useMutation(createPost, {
+  const { mutate, error } = useMutation(createPost, {
     retry: false,
     onSuccess: () => {
       client.invalidateQueries("allPosts")
@@ -34,7 +34,10 @@ const AddPost = () => {
     mutate({ title: post?.title, body: post?.body, userId: Date.now() })
   }
 
-  console.log({ error, isSuccess, status, data })
+  if (error) {
+    return <p>{(error as Error).message}</p>
+  }
+
   return (
     <div className="w-100">
       <form noValidate onSubmit={handleSubmit}>
